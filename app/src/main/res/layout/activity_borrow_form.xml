@@ -108,17 +108,6 @@
         app:layout_constraintTop_toBottomOf="@+id/firstName"
         app:layout_constraintVertical_bias="0.0" />
 
-    <TextView
-        android:id="@+id/anoNa"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="52dp"
-        android:text="ANO na man ba yon"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.434"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/datePicker" />
-
     <ImageView
         android:id="@+id/bookPicture"
         android:layout_width="100dp"
@@ -200,9 +189,9 @@
         android:id="@+id/datePicker"
         android:layout_width="120dp"
         android:layout_height="30dp"
+        android:layout_marginTop="12dp"
         android:background="@drawable/rounded_button"
         android:backgroundTint="#A68D16"
-        android:layout_marginTop="12dp"
         android:fontFamily="@font/alata"
         android:text="Select Date"
         android:textColor="@color/white"
@@ -251,5 +240,28 @@
         app:layout_constraintStart_toStartOf="@+id/timeTxt"
         app:layout_constraintTop_toBottomOf="@+id/timeTxt" />
 
+    <ProgressBar
+        android:id="@+id/progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/confirmBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginBottom="40dp"
+        android:fontFamily="@font/alata"
+        android:text="Confirm"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/timePicker"
+        app:layout_constraintHorizontal_bias="0.8"
+        app:layout_constraintStart_toEndOf="@+id/datePicker" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

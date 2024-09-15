@@ -1,14 +1,18 @@
 package com.example.androiduicontrols;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -19,12 +23,15 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import java.util.Calendar;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class borrowForm extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
-    private Button datePickerBtn, timePickerBtn;
+    private Button datePickerBtn, timePickerBtn, confirm;
     private TextView dateText, timeText;
     private int year, month, day, hour, minute;
+    private EditText fullname, section;
 
     private Spinner yearLvl;
 
@@ -33,6 +40,9 @@ public class borrowForm extends AppCompatActivity implements AdapterView.OnItemS
 
     private String title, author, genre;
     private int imageResId;
+    ProgressBar pb;
+    int counter = 0;
+
 
 
     @Override
@@ -49,7 +59,110 @@ public class borrowForm extends AppCompatActivity implements AdapterView.OnItemS
         retrieveBookData();
         dateAndTime();
 
+        finalConfirmation();
+
+        fullname = findViewById(R.id.firstName);
+        section = findViewById(R.id.section);
+
+        pb = findViewById(R.id.progress);
+        pb.setVisibility(View.GONE);
+
     }
+
+    private void finalConfirmation() {
+        confirm = findViewById(R.id.confirmBtn);
+
+        confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                prog(100); // Start progress
+            }
+        });
+    }
+
+    private void prog(int targetProgress) {
+
+        pb.setVisibility(View.VISIBLE);
+        // Ensure the counter starts from 0
+        counter = 0;
+        pb.setProgress(counter); // Initialize progress bar to the starting point.
+
+        final Timer t = new Timer();
+        TimerTask tt = new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        counter++;
+                        pb.setProgress(counter);
+
+                        // Stop the Timer when the counter reaches the target progress value.
+                        if (counter >= targetProgress) {
+                            t.cancel();
+                            pb.setVisibility(View.GONE); // Hide the progress bar after completion
+                            showUserDetailsOverlay(); // Show the user details overlay
+                        }
+                    }
+                });
+            }
+        };
+
+        // Schedule the TimerTask with a fixed delay (e.g., 100ms)
+        t.schedule(tt, 0, 100);
+    }
+
+    private void showUserDetailsOverlay() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                // Create a custom dialog for showing user details
+                AlertDialog.Builder builder = new AlertDialog.Builder(borrowForm.this);
+                LayoutInflater inflater = borrowForm.this.getLayoutInflater();
+
+                // Inflate the custom overlay layout
+                View dialogView = inflater.inflate(R.layout.overlay_user_details, null);
+                builder.setView(dialogView);
+
+                // Initialize TextViews from the overlay layout
+                TextView fullnameText = dialogView.findViewById(R.id.fullnameText);
+                TextView sectionText = dialogView.findViewById(R.id.sectionText);
+                TextView titleText = dialogView.findViewById(R.id.titleText);
+                TextView authorText = dialogView.findViewById(R.id.authorText);
+                TextView genreText = dialogView.findViewById(R.id.genreText);
+                TextView dateText = dialogView.findViewById(R.id.dateText);
+                TextView timeText = dialogView.findViewById(R.id.timeText);
+                TextView yearLevelText = dialogView.findViewById(R.id.yearLevelText);
+
+                // Set the actual details retrieved from the user's input
+                titleText.setText("Title: " + title);
+                authorText.setText("Author: " + author);
+                genreText.setText("Genre: " + genre);
+
+                // Retrieve and display selected date, time, and year level
+                dateText.setText("Date: " + borrowForm.this.dateText.getText().toString());
+                timeText.setText("Time: " + borrowForm.this.timeText.getText().toString());
+                fullnameText.setText("Fullname: " + fullname.getText().toString());
+                sectionText.setText("Section: " + section.getText().toString());
+                yearLevelText.setText("Year Level: " + yearLvl.getSelectedItem().toString());
+
+                Button okButton = dialogView.findViewById(R.id.okBtn);
+
+                // Create and show the dialog
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+
+                okButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        alertDialog.dismiss();
+                    }
+                });
+
+            }
+        });
+    }
+
 
     private void dateAndTime() {
         datePickerBtn = findViewById(R.id.datePicker);
