@@ -1,10 +1,13 @@
 package com.example.androiduicontrols;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -15,7 +18,13 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.util.Calendar;
+
 public class borrowForm extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+
+    private Button datePickerBtn, timePickerBtn;
+    private TextView dateText, timeText;
+    private int year, month, day, hour, minute;
 
     private Spinner yearLvl;
 
@@ -38,6 +47,50 @@ public class borrowForm extends AppCompatActivity implements AdapterView.OnItemS
         });
         // Start
         retrieveBookData();
+        dateAndTime();
+
+    }
+
+    private void dateAndTime() {
+        datePickerBtn = findViewById(R.id.datePicker);
+        timePickerBtn = findViewById(R.id.timePicker);
+        dateText = findViewById(R.id.dateTxt);
+        timeText = findViewById(R.id.timeTxt);
+
+        Calendar calendar = Calendar.getInstance();
+        year = calendar.get(Calendar.YEAR);
+        month = calendar.get(Calendar.MONTH);
+        day = calendar.get(Calendar.DAY_OF_MONTH);
+        hour = calendar.get(Calendar.HOUR_OF_DAY);
+        minute = calendar.get(Calendar.MINUTE);
+
+        datePickerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(borrowForm.this,
+                        (view1, selectedYear, selectedMonth, selectedDay) -> {
+                            dateText.setText("Selected Date: " + selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear);
+                            year = selectedYear;
+                            month = selectedMonth;
+                            day = selectedDay;
+                        }, year, month, day);
+                datePickerDialog.show();
+            }
+        });
+
+        timePickerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TimePickerDialog timePickerDialog = new TimePickerDialog(borrowForm.this,
+                        (view1, selectedHour, selectedMinute) -> {
+                            // Display selected time
+                            timeText.setText("Selected Time: " + String.format("%02d", selectedHour) + ":" + String.format("%02d", selectedMinute));
+                            hour = selectedHour;
+                            minute = selectedMinute;
+                        }, hour, minute, true);
+                timePickerDialog.show();
+            }
+        });
 
     }
 
