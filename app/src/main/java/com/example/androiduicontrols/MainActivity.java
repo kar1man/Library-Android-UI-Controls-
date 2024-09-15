@@ -1,14 +1,19 @@
 package com.example.androiduicontrols;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -19,10 +24,14 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    private Book selectedBook;
     View viewbg;
     TextView bookTitle, bookAuthor, bookGenre;
     AutoCompleteTextView searchAutoComplete;
-    ImageButton bookButton;
+    ImageButton bookButton, quitButton;
+    Button borrowButton;
+    AlertDialog.Builder builder;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +45,35 @@ public class MainActivity extends AppCompatActivity {
         });
 
         searchButton();
+        quitt();
         layoutView(); // for custom view or other layouts
+    }
+
+    private void quitt() {
+        quitButton = findViewById(R.id.quitBtn);
+        builder = new AlertDialog.Builder(MainActivity.this);
+        quitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                builder.setTitle("Exit App")
+                        .setMessage("Are you sure you want to close the application?")
+                        .setCancelable(true)
+                        .setPositiveButton("Quit", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                finish();
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        })
+                        .show();
+            }
+        });
+
     }
 
     private void searchButton() {
@@ -45,6 +82,41 @@ public class MainActivity extends AppCompatActivity {
         bookTitle = findViewById(R.id.title);
         bookAuthor = findViewById(R.id.author);
         bookGenre = findViewById(R.id.genre);
+        borrowButton = findViewById(R.id.borrowBtn);
+        builder = new AlertDialog.Builder(MainActivity.this);
+
+        borrowButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                builder.setTitle("Notice!")
+                        .setMessage("Are you sure you want to borrow this book?")
+                        .setCancelable(true)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                                if (selectedBook != null) {
+                                    Intent borrowIntent = new Intent(MainActivity.this, borrowForm.class);
+                                    borrowIntent.putExtra("bookTitle", selectedBook.getTitle());
+                                    borrowIntent.putExtra("bookAuthor", selectedBook.getAuthor());
+                                    borrowIntent.putExtra("bookGenre", selectedBook.getGenre());
+                                    borrowIntent.putExtra("bookResId", selectedBook.getBookResId());
+                                    startActivity(borrowIntent);
+                                } else {
+                                    showAlertDialog("Please select a book first.");
+                                }
+
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.cancel();
+                            }
+                        })
+                        .show();
+            }
+        });
 
         List<Book> bookCollections = new ArrayList<>();
 
@@ -64,15 +136,22 @@ public class MainActivity extends AppCompatActivity {
         searchAutoComplete.setThreshold(1);
 
         searchAutoComplete.setOnItemClickListener((parent, view, position, id) -> {
-            Book selectedBook = (Book) parent.getItemAtPosition(position);
+            selectedBook = (Book) parent.getItemAtPosition(position);
             bookButton.setImageResource(selectedBook.getBookResId());
+            bookButton.setScaleType(ImageView.ScaleType.CENTER_CROP);
             bookTitle.setText(selectedBook.getTitle());
             bookAuthor.setText(selectedBook.getAuthor());
             bookGenre.setText(selectedBook.getGenre());
         });
+    }
 
-
-
+    private void showAlertDialog(String message) {
+        new AlertDialog.Builder(this)
+                .setTitle("Action Required")
+                .setMessage(message)
+                .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                .create()
+                .show();
     }
 
     private void layoutView() {

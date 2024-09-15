@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Android UI Controls</string>
+    <string-array name="yrLvl">
+        <item>Year Level</item>
+        <item>Senior High</item>
+        <item>First Year</item>
+        <item>Second Year</item>
+        <item>Third Year</item>
+        <item>Fourth Year</item>
+    </string-array>
 </resources>
