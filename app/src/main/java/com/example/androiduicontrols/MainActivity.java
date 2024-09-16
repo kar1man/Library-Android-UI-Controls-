@@ -85,6 +85,39 @@ public class MainActivity extends AppCompatActivity {
         borrowButton = findViewById(R.id.borrowBtn);
         builder = new AlertDialog.Builder(MainActivity.this);
 
+        bookButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                builder.setTitle("Notice!")
+                        .setMessage("Are you sure you want to borrow this book?")
+                        .setCancelable(true)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                                if (selectedBook != null) {
+                                    Intent borrowIntent = new Intent(MainActivity.this, borrowForm.class);
+                                    borrowIntent.putExtra("bookTitle", selectedBook.getTitle());
+                                    borrowIntent.putExtra("bookAuthor", selectedBook.getAuthor());
+                                    borrowIntent.putExtra("bookGenre", selectedBook.getGenre());
+                                    borrowIntent.putExtra("bookResId", selectedBook.getBookResId());
+                                    startActivity(borrowIntent);
+                                } else {
+                                    showAlertDialog("Please select a book first.");
+                                }
+
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.cancel();
+                            }
+                        })
+                        .show();
+            }
+        });
+
         borrowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

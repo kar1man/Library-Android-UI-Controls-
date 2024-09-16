@@ -34,6 +34,14 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.343" />
+
+        <ImageButton
+            android:id="@+id/backBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:background="@null"
+            android:tint="#2C2C2C"
+            app:srcCompat="@android:drawable/ic_menu_revert" />
     </FrameLayout>
 
     <View

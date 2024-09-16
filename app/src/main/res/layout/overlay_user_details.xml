@@ -10,10 +10,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/alata"
-        android:textStyle="bold"
-        android:text="Borrow Confirmation"
+        android:text="Confirmation Receipt"
         android:textAlignment="center"
-        android:textSize="24sp"/>
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/titleText"

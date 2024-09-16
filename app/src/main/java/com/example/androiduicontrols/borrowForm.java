@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -34,6 +35,7 @@ public class borrowForm extends AppCompatActivity implements AdapterView.OnItemS
     private EditText fullname, section;
 
     private Spinner yearLvl;
+    ImageButton homeBtn;
 
     private TextView bookTitle, bookAuthor, bookGenre;
     private ImageView bookImage;
@@ -60,6 +62,16 @@ public class borrowForm extends AppCompatActivity implements AdapterView.OnItemS
         dateAndTime();
 
         finalConfirmation();
+
+        homeBtn = findViewById(R.id.backBtn);
+        homeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent homeIntent = new Intent(borrowForm.this, MainActivity.class);
+                startActivity(homeIntent);
+            }
+        });
+
 
         fullname = findViewById(R.id.firstName);
         section = findViewById(R.id.section);
@@ -140,8 +152,8 @@ public class borrowForm extends AppCompatActivity implements AdapterView.OnItemS
                 genreText.setText("Genre: " + genre);
 
                 // Retrieve and display selected date, time, and year level
-                dateText.setText("Date: " + borrowForm.this.dateText.getText().toString());
-                timeText.setText("Time: " + borrowForm.this.timeText.getText().toString());
+                dateText.setText("Return Date: " + borrowForm.this.dateText.getText().toString());
+                timeText.setText("Return Time: " + borrowForm.this.timeText.getText().toString());
                 fullnameText.setText("Fullname: " + fullname.getText().toString());
                 sectionText.setText("Section: " + section.getText().toString());
                 yearLevelText.setText("Year Level: " + yearLvl.getSelectedItem().toString());
